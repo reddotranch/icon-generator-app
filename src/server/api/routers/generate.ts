@@ -87,8 +87,9 @@ export const generateRouter = createTRPCRouter({
     //TODO: Save the generated icon to the S3 bucket
     await S3.putObject({
       Bucket: 'ranch-generator-app',
-      Body: `base64${base64Image}`,
-      Key: 'my-image1.jpg',
+      // Body: `base64${base64Image}`,
+      Body: Buffer.from(base64Image!, 'base64'),
+      Key: 'my-zz',
       ContentEncoding: 'base64',
       ContentType: 'image/jpeg',
     })
