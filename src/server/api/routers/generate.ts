@@ -16,6 +16,8 @@ const S3 = new AWS.S3({
   region: 'us-west-2',
 });
 
+const BUCKET_NAME = 'ranch-generator-app';
+
 const openai = new OpenAI({
   apiKey: process.env.DALLE_API_KEY, // This is the default and can be omitted
 });
@@ -104,7 +106,7 @@ export const generateRouter = createTRPCRouter({
 
 
     return {
-      imageUrl: base64Image,
+      imageUrl: `https://${BUCKET_NAME}.s3.us-west-2.amazonaws.com/${icon.id}`,
     };
   }),
 });

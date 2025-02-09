@@ -18,7 +18,9 @@ const config = {
         pathname: '/wp-content/uploads/sites/70/2021/12/Thomas-Wimberly_Smokey-Bear_hi-res-scaled.jpg',
       },
     ],
-    domains: ['https://api.openai.com/v1/engines/davinci-codex/completions'],
+    domains: ['https://api.openai.com/v1/engines/davinci-codex/completions',
+      'ranch-generator-app.s3.us-west-2.amazonaws.com',
+    ],
   },
 
   /**
