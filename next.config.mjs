@@ -10,6 +10,17 @@
 const config = {
   reactStrictMode: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'smokeybear.adcouncilkit.org',
+        pathname: '/wp-content/uploads/sites/70/2021/12/Thomas-Wimberly_Smokey-Bear_hi-res-scaled.jpg',
+      },
+    ],
+    domains: ['https://api.openai.com/v1/engines/davinci-codex/completions'],
+  },
+
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.

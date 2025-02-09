@@ -1,20 +1,102 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { Input } from "~/component/Input";
 
-import {
-  createTRPCRouter, publicProcedure} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+
+import OpenAI from 'openai';
+import { env } from "~/env.mjs";
+import { b64Image } from "~/data/b64Image";
+import AWS from 'aws-sdk';
+
+const S3 = new AWS.S3({
+  credentials:{
+    accessKeyId: env.ACCESS_KEY_ID,
+    secretAccessKey: env.SECRET_ACCESS_KEY,
+  },
+  region: 'us-west-2',
+});
+
+const openai = new OpenAI({
+  apiKey: process.env.DALLE_API_KEY, // This is the default and can be omitted
+});
+
+// const openai = new OpenAI();
+
+async function generateIcon(prompt: string): Promise<string | undefined> {
+  if (env.MOCK_DALLE === 'true') {
+    return b64Image;
+  } else {
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: prompt,
+      n: 1,
+      size: "1024x1024",
+      response_format: "b64_json", // to get the image as a base64 string
+    });
+    // console.log(response.data[0]?.b64_json);
+    return response.data[0]?.b64_json;
+  }
+}
+
 
 export const generateRouter = createTRPCRouter({
-   generateIcon: publicProcedure
+   generateIcon: protectedProcedure
    .input(
     z.object({
     prompt: z.string(),
 })
 ) 
-  .mutation(({ctx, input}) => {
-    console.log("we made it!", input.prompt);
+  .mutation(async ({ctx, input}) => {
+    // console.log("we made it!", input.prompt);
+
+    //TODO: Verify the user has enough credits to generate an icon
+    const {count} = await ctx.prisma.user.updateMany({
+      where: {
+        id: ctx.session.user.id, //TODO: Update this to the actual user id
+        credits: {
+          gte: 1,
+        },
+      },
+      data: {
+        credits: {
+          decrement: 1,
+        },
+      },
+    });
+
+    if (count <= 0) {
+      throw new TRPCError ({
+        code: "BAD_REQUEST",
+        message: "Not enough credits!",
+      });
+    }
+
+    console.log(count);
+
+    //TODO: Make a fetch request to the API to generate the icon
+    // async function main() {
+    //   const chatCompletion = await client.chat.completions.create({
+    //     messages: [{ role: 'user', content: 'Say this is a test' }],
+    //     model: 'gpt-4o',
+    //   });
+    // }
+    
+    const base64Image = await generateIcon(input.prompt);
+    // console.log(base64);
+
+    //TODO: Save the generated icon to the S3 bucket
+    await S3.putObject({
+      Bucket: 'ranch-generator-app',
+      Body: `base64${base64Image}`,
+      Key: 'my-image1.jpg',
+      ContentEncoding: 'base64',
+      ContentType: 'image/jpeg',
+    })
+    .promise();
+
+
     return {
-      message: "success",
+      imageUrl: base64Image,
     };
   }),
 });
