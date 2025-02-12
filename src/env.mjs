@@ -25,6 +25,10 @@ const server = z.object({
   MOCK_DALLE: z.string(),
   ACCESS_KEY_ID: z.string(),
   SECRET_ACCESS_KEY: z.string(),
+  STRIPE_PUBLIC_KEY: z.string(),
+  STRIPE_PRIVATE_KEY: z.string(),
+  HOST_NAME: z.string(),
+  PRICE_ID: z.string(),
 });
 
 /**
@@ -52,6 +56,10 @@ const processEnv = {
   MOCK_DALLE:process.env.MOCK_DALLE,
   ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
   SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
+  STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+  STRIPE_PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
+  HOST_NAME: process.env.HOST_NAME,
+  PRICE_ID: process.env.PRICE_ID,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
