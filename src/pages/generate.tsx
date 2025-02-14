@@ -22,6 +22,15 @@ const GeneratePage: NextPage = () => {
 
   const buyCredits = useBuyCredits();
 
+  const handleBuyCredits = async () => {
+    try {
+      const successUrl = `${window.location.origin}/success`; // Define your success URL
+      await buyCredits.buyCredits(successUrl);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
     const [form, setForm] = useState({
         prompt: "",
     });
@@ -85,9 +94,10 @@ return (
         {isLoggedIn && (
           <>
             <Button
-              onClick={() => {
-                buyCredits.buyCredits().catch(console.error);
-            }}
+            //   onClick={() => {
+            //     buyCredits.buyCredits().catch(console.error);
+            // }}
+            onClick={handleBuyCredits}
           >
             Buy Credits
           </Button>

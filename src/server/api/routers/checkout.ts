@@ -4,6 +4,7 @@ import {
 } from "~/server/api/trpc";
 import Stripe from 'stripe';
 import { env } from "~/env.mjs";
+import { z } from 'zod';
 
 console.log("Stripe API Key:", env.STRIPE_PRIVATE_KEY);
 
@@ -12,7 +13,11 @@ const stripe = new Stripe(env.STRIPE_PRIVATE_KEY, {
 });
 
 export const checkoutRouter = createTRPCRouter({
-  createCheckout: protectedProcedure.mutation(async ({ ctx }) => {
+  createCheckout: protectedProcedure
+  .input(z.object({
+    successUrl: z.string(),
+  }))
+  .mutation(async ({ ctx, input }) => {
       return stripe.checkout.sessions.create({
         payment_method_types: ['card', 'us_bank_account'],
         metadata: {
@@ -20,7 +25,7 @@ export const checkoutRouter = createTRPCRouter({
         },
         line_items: [{price: env.PRICE_ID, quantity: 1}],
         mode: "payment",
-        success_url: `${env.HOST_NAME}`,
+        success_url: input.successUrl,
         cancel_url: `${env.HOST_NAME}`,
       });
     }),
