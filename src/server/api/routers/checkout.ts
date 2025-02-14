@@ -5,7 +5,9 @@ import {
 import Stripe from 'stripe';
 import { env } from "~/env.mjs";
 
-const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+console.log("Stripe API Key:", env.STRIPE_PRIVATE_KEY);
+
+const stripe = new Stripe(env.STRIPE_PRIVATE_KEY, {
     apiVersion: '2025-01-27.acacia',
 });
 
@@ -16,10 +18,10 @@ export const checkoutRouter = createTRPCRouter({
         metadata: {
           userId: ctx.session.user.id,
         },
-        line_items: [{price: "env.PRICE_ID", quantity: 1}],
+        line_items: [{price: env.PRICE_ID, quantity: 1}],
         mode: "payment",
-        success_url: `${env.HOST_NAME}/success`,
-        cancel_url: `${env.HOST_NAME}/cancel`,
+        success_url: `${env.HOST_NAME}`,
+        cancel_url: `${env.HOST_NAME}`,
       });
     }),
 });
