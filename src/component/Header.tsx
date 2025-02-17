@@ -1,9 +1,47 @@
+import { Button } from "./Button";
+import { MainLink } from "./MainLink";
+import { signIn, signOut, useSession } from "next-auth/react";
+
+
 export function Header() {
-    return <header className="flex h-16 items-center dark:bg-grey-800">
+    const session = useSession();
+    const isLoggedIn = !!session.data;
+    return ( 
+    <header className="container mx-auto flex h-16 items-center justify-between px-4 dark:bg-grey-800">
         
-        <div>LOGO</div>
-        <div>LINKS</div>
-        <div>Account Buttons</div>
-        
-        TEST</header>
+        <MainLink href="/">
+        Icon Generator
+        </MainLink>
+        <ul>
+            <li>
+                <MainLink href="/generate">Generate</MainLink>
+            </li>
+        </ul>
+        <ul>
+            {isLoggedIn && (
+                <li>
+                    <Button
+                    variant="secondary"
+                        onClick={() => {
+                        signOut().catch(console.error);
+                        }}
+                    >
+                    Logout
+                    </Button>
+                </li>
+            )}
+            {!isLoggedIn && (
+                <li>
+                    <Button
+                        onClick={() => {
+                        signIn().catch(console.error);
+                        }}
+                    >
+                    Login
+                    </Button>
+                </li>
+        )}
+        </ul>
+    </header>
+    );
 }
