@@ -5,6 +5,7 @@ import {
 import Stripe from 'stripe';
 import { env } from "~/env.mjs";
 import { z } from 'zod';
+import { $schema } from ".eslintrc.cjs";
 
 console.log("Stripe API Key:", env.STRIPE_PRIVATE_KEY);
 
@@ -25,8 +26,9 @@ export const checkoutRouter = createTRPCRouter({
         },
         line_items: [{price: env.PRICE_ID, quantity: 1}],
         mode: "payment",
-        success_url: input.successUrl,
-        cancel_url: `${env.HOST_NAME}`,
+        // success_url: input.successUrl,
+        success_url: `${env.HOST_NAME}/generate`,
+        cancel_url: `${env.HOST_NAME}/generate`,
       });
     }),
 });
