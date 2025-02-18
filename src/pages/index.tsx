@@ -3,11 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { MainLinkButton } from "~/component/MainLinkButton";
 
-import { api } from "~/utils/api";
-
 function HeroBanner() {
   return (
-    <section className="grid grid-cols-2 gap-12 px-8 mt-36">
+    <section className="mt-12 mb-24 grid grid-cols-1 sm:grid-cols-2 gap-12 px-8 sm:mt-36">
       <div className="flex flex-col gap-4">
         <h1 className="text-6xl">Generate icons with a click of a button</h1>
         <p className="text-2xl">Use AI to generate instead of waiting for a graphic designer.</p>
@@ -15,7 +13,12 @@ function HeroBanner() {
         Generate an Icon
         </MainLinkButton>
       </div>
-      <Image src="/banner.png" alt="Icon Generator" width={800} height={400} />
+      <Image
+         src="/banner.png" 
+         alt="Icon Generator" 
+         width={800} 
+         height={400} 
+         className="order-first sm:-order-none"/>
     </section>
     );
 }
