@@ -69,12 +69,15 @@ return (
               Submit
           </Button>
         </form>
+
+        {imageUrl && (
         <Image
           src={`data:image/jpeg;base64,${imageUrl}`}
           alt="an image of your generate prompt"
           width={100}
           height={100}
         />
+        )}
       </main>
     </>
   );
