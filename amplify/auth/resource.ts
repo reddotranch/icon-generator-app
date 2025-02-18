@@ -9,3 +9,4 @@ export const auth = defineAuth({
     email: true,
   },
 });
+// env is now bootstrapped
