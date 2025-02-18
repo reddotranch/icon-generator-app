@@ -7,10 +7,22 @@ import { FormGroup } from "~/component/FormGroup";
 import { Input } from "~/component/Input";
 import { api } from "~/utils/api";
 
+const colors = [
+  'blue',
+  'red',
+  'green',
+  'yellow',
+  'orange',
+  'purple',
+  'pink',
+  'green'
+]
+
 const GeneratePage: NextPage = () => {
 
     const [form, setForm] = useState({
         prompt: "",
+        color: "",
     });
     const [imageUrl, setImageUrl] = useState('')
 
@@ -35,11 +47,8 @@ const GeneratePage: NextPage = () => {
     function handleFormSubmit(e: React.FormEvent) {
         e.preventDefault();
         console.log(form);
-        generateIcon.mutate({
-            prompt: form.prompt,
-        //We can now submit data to the backend
-        });
-        setForm({ prompt: "" });
+        generateIcon.mutate(form);
+        setForm((prev) => ({...prev, prompt: "" }));
 
     }
 
@@ -54,25 +63,51 @@ return (
         <h1 className="text-6xl">Generate icons here</h1>
         <p className="text-2xl mb-12">Fill in the form below to generate your icons.</p>
         <form className="flef flex-col gap-4" onSubmit={handleFormSubmit}>
-          <h2 className="text-xl">
+          <h2 className="text-xl mb-8">
             1. Describe the icon you want to generate
           </h2>
-          <FormGroup>
+          <FormGroup className="mb-12">
               <label>Prompt</label>
               <Input value={form.prompt} onChange={updateForm('prompt')}></Input>
           </FormGroup>
+
+          <h2 className="text-xl">
+            2. Pick your icon color.
+          </h2>
+          <FormGroup className="mb-12 grid grid-cols-4">
+            {colors.map((color) => (
+              <label key={color} className="flex gap-2 text-2xl">
+              <input 
+                type="radio" 
+                name="color" 
+                value={color}
+                checked={color === form.color}
+                onChange={() => setForm((prev) => ({ ...prev, color}))}></input>
+              {color}
+              </label>
+            ))}
+          </FormGroup>
+
           <Button 
           isLoading={generateIcon.isLoading}
           disabled={generateIcon.isLoading}>Submit</Button>
         </form>
 
         {imageUrl && (
+        <>
+        <h2 className="text-xl">
+           Your generated icons
+          </h2>
+          <section className="grid grid-cols-4">
         <Image
           src={imageUrl}
           alt="an image of your generate prompt"
           width={100}
           height={100}
+          className="w-full"
         />
+        </section>
+        </>
         )}
       </main>
     </>
