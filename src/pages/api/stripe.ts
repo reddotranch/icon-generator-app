@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { env } from '~/env.mjs';
 import { buffer } from 'micro';
@@ -28,9 +28,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         env.STRIPE_WEBHOOK_SECRET
       );
     } catch (err) {
-        let message = `Unknown Error`;
-        if (err instanceof Error) message = err.message;
-      res.status(400).send('Webhook Error: ${message}');
+        // let message = `Unknown Error`;
+        // if (err instanceof Error) message = err.message;
+      res.status(400).send('Webhook Error: ${err.message}');
       return;
     }
 
