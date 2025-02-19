@@ -1,8 +1,5 @@
-import { loadStripe } from '@stripe/stripe-js';
-// import { env } from '~/env.mjs';
 import {api } from '~/utils/api';
 
-// const stripePromise = loadStripe(`${env.NEXT_PUBLIC_STRIPE_KEY}`);
 
 export function useBuyCredits() {
 

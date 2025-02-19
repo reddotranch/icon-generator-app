@@ -32,7 +32,9 @@ export function Header() {
                 <>
                 <li>
                     <Button
-                        onClick={handleBuyCredits}
+                        onClick={() => {
+                            handleBuyCredits().catch(console.error);
+                        }}
                      >
                     Buy Credits
                     </Button>
