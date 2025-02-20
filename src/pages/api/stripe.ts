@@ -19,7 +19,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         const buf = await buffer(req);
         const sig = req.headers['stripe-signature'] as string;
 
-    let event;
+    let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(
@@ -43,6 +43,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         throw new Error('Metadata or userId is missing in the event data');
       }
         console.log(`Checkout session completed for ${completedEvent.id}`);
+        const userId = completedEvent.metadata.userId || 'unknown user';
 
       await prisma.user.update({
         where: {
@@ -53,7 +54,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             increment: 100,
           },
         },
-      })
+      });
+      console.log(`PaymentIntent for ${userId} was successful!`);
       console.log(`PaymentIntent for ${completedEvent.metadata.userId} was successful!`);
       // Then define and call a method to handle the successful payment intent.
       // handlePaymentIntentSucceeded(paymentIntent);
