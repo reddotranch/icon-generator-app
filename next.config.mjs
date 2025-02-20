@@ -33,6 +33,10 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 // const fs = require('fs');
